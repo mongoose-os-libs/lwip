@@ -17,6 +17,20 @@
 
 #include <stdbool.h>
 
+#include "common/platform.h"
+
+#include "lwip/tcpip.h"
+
+static void tcpip_init_done(void *arg) {
+  *((bool *) arg) = true;
+}
+
 bool mgos_lwip_init(void) {
+#if CS_PLATFORM != CS_P_ESP32 && CS_PLATFORM != CS_P_ESP8266
+  volatile bool lwip_inited = false;
+  tcpip_init(tcpip_init_done, (void *) &lwip_inited);
+  while (!lwip_inited) {
+  }
+#endif
   return true;
 }
