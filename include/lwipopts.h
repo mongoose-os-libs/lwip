@@ -38,12 +38,16 @@ extern "C" {
 #define LWIP_ETHERNET 1
 #define LWIP_MULTICAST_TX_OPTIONS 1
 #define LWIP_IGMP 1
+#define LWIP_DNS 1
 #define LWIP_DNS_SECURE 7
+#define TCP_MSL 5000  // To reduce TIME_WAIT length
 #define TCP_SND_QUEUELEN 9
 #define TCP_SNDLOWAT 1071
 #define TCP_SNDQUEUELOWAT 5
 #define TCP_WND_UPDATE_THRESHOLD 536
 #define LWIP_NETCONN 0
+#define LWIP_NETIF_API 1
+#define LWIP_NETIF_EXT_STATUS_CALLBACK 1
 #define LWIP_SOCKET 0
 #define LWIP_COMPAT_SOCKETS 0
 #define LWIP_POSIX_SOCKETS_IO_NAMES 0
@@ -52,9 +56,17 @@ extern "C" {
 
 #define SYS_LIGHTWEIGHT_PROT 1
 
-#define LWIP_NOASSERT
+#define LWIP_NOASSERT 1
 
 #define LWIP_USE_EXTERNAL_MBEDTLS 1
+
+#define LWIP_DEBUG 1
+
+#include "common/cs_dbg.h"
+#define LWIP_PLATFORM_DIAG(x) LOG(LL_DEBUG, x)
+#define LWIP_PLATFORM_ERROR(x) LOG(LL_ERROR, (x))
+
+// #define DHCP_DEBUG LWIP_DBG_ON
 
 #ifdef __cplusplus
 }

@@ -15,33 +15,22 @@
  * limitations under the License.
  */
 
-#include "mgos_lwip.h"
+#pragma once
 
 #include <stdbool.h>
 
-#include "common/platform.h"
+#include "mgos_net_hal.h"
 
-#include "lwip/tcpip.h"
+#include "lwip/ip_addr.h"
+#include "lwip/netif.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 bool mgos_lwip_if_get_ip_info(const struct netif *nif,
-                              struct mgos_net_ip_info *ip_info) {
-  if (nif == NULL) return false;
-  ip_info->ip.sin_addr.s_addr = ip_addr_get_ip4_u32(&nif->ip_addr);
-  ip_info->netmask.sin_addr.s_addr = ip_addr_get_ip4_u32(&nif->netmask);
-  ip_info->gw.sin_addr.s_addr = ip_addr_get_ip4_u32(&nif->gw);
-  return true;
-}
+                              struct mgos_net_ip_info *ip_info);
 
-static void tcpip_init_done(void *arg) {
-  *((bool *) arg) = true;
+#ifdef __cplusplus
 }
-
-bool mgos_lwip_init(void) {
-#if CS_PLATFORM != CS_P_ESP32 && CS_PLATFORM != CS_P_ESP8266
-  volatile bool lwip_inited = false;
-  tcpip_init(tcpip_init_done, (void *) &lwip_inited);
-  while (!lwip_inited) {
-  }
 #endif
-  return true;
-}
