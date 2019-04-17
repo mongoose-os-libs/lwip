@@ -194,7 +194,6 @@ static void dhcp_bind(struct netif *netif);
 #if DHCP_DOES_ARP_CHECK
 static err_t dhcp_decline(struct netif *netif);
 #endif /* DHCP_DOES_ARP_CHECK */
-static err_t dhcp_rebind(struct netif *netif);
 static err_t dhcp_reboot(struct netif *netif);
 static void dhcp_set_state(struct dhcp *dhcp, u8_t new_state);
 
@@ -1202,7 +1201,7 @@ dhcp_renew(struct netif *netif)
  *
  * @param netif network interface which must rebind with a DHCP server
  */
-static err_t
+err_t
 dhcp_rebind(struct netif *netif)
 {
   struct dhcp *dhcp = netif_dhcp_data(netif);

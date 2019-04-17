@@ -107,6 +107,7 @@ void dhcp_set_struct(struct netif *netif, struct dhcp *dhcp);
 void dhcp_cleanup(struct netif *netif);
 err_t dhcp_start(struct netif *netif);
 err_t dhcp_renew(struct netif *netif);
+err_t dhcp_rebind(struct netif *netif);
 err_t dhcp_release(struct netif *netif);
 void dhcp_stop(struct netif *netif);
 void dhcp_release_and_stop(struct netif *netif);
