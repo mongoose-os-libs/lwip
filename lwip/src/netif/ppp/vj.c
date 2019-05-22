@@ -470,7 +470,7 @@ vj_uncompress_uncomp(struct pbuf *nb, struct vjcompress *comp)
           > nb->len
       || hlen > MAX_HDR) {
     PPPDEBUG(LOG_INFO, ("vj_uncompress_uncomp: bad cid=%d, hlen=%d buflen=%d\n",
-      IPH_PROTO(ip), hlen, nb->len));
+      IPH_PROTO(ip), (int) hlen, nb->len));
     vj_uncompress_err(comp);
     return -1;
   }
@@ -597,7 +597,7 @@ vj_uncompress_tcp(struct pbuf **nb, struct vjcompress *comp)
      * this but the old slip framing won't)
      */
     PPPDEBUG(LOG_INFO, ("vj_uncompress_tcp: head buffer %d too short %d\n",
-          n0->len, vjlen));
+          n0->len, (int) vjlen));
     goto bad;
   }
 
