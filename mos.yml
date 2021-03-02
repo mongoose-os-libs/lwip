@@ -4,8 +4,36 @@ type: lib
 version: 2.1.2
 
 conds:
-  # For esp8266 and esp32, SDK provides LwIP and this is basically an no-op library.
-  #
+  # For esp32, SDK provides LwIP and this is basically an no-op library.
+  - when: mos.platform == "esp8266"
+    apply:
+      version: 1.4.0
+      sources:
+        - src/cs_lwip
+        - src/cs_lwip/src/api
+        - src/cs_lwip/src/core
+        - src/cs_lwip/src/core/ipv4
+        - src/cs_lwip/src/netif
+        - src/cs_lwip/espressif/app/dhcpserver.c
+        - src/cs_lwip/espressif/app/espconn_tcp.c
+      includes:
+        - src/cs_lwip/src/include
+        - src/cs_lwip/src/include/ipv4
+        - src/cs_lwip/espressif/include
+      cdefs:
+        EBUF_LWIP: 1
+        LWIP_OPEN_SRC: 1
+        PBUF_RSV_FOR_WLAN: 1
+        ESP_ENABLE_ESPCONN: 0
+        LWIP_ENABLE_ESF_BUF_REXMIT: 1
+        LWIP_RANDOMIZE_INITIAL_LOCAL_PORTS: 1
+        LWIP_RAND: os_random
+        TCP_MSS: 1460
+        TCP_MSL: 5000
+        TCP_WND: 2920
+      build_vars:
+        MGOS_ESP8266_LWIP: 1
+
   # TODO(rojer): When mos supports more elaborate conds, this can be deduped.
   - when: mos.platform == "stm32"
     apply:
