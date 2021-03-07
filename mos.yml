@@ -15,17 +15,16 @@ conds:
           apply:
             version: 1.4.1
             sources:
-              - src/cs_lwip
-              - src/cs_lwip/src/api
-              - src/cs_lwip/src/core
-              - src/cs_lwip/src/core/ipv4
-              - src/cs_lwip/src/netif
-              - src/cs_lwip/espressif/app/dhcpserver.c
-              - src/cs_lwip/espressif/app/espconn_tcp.c
+              - src/esp8266
+              - src/esp8266/cs_lwip/src/api
+              - src/esp8266/cs_lwip/src/core
+              - src/esp8266/cs_lwip/src/core/ipv4
+              - src/esp8266/cs_lwip/src/netif
+              - src/esp8266/cs_lwip/espressif/app/dhcpserver.c
             includes:
-              - src/cs_lwip/src/include
-              - src/cs_lwip/src/include/ipv4
-              - src/cs_lwip/espressif/include
+              - src/esp8266/cs_lwip/src/include
+              - src/esp8266/cs_lwip/src/include/ipv4
+              - src/esp8266/cs_lwip/espressif/include
             cdefs:
               EBUF_LWIP: 1
               LWIP_OPEN_SRC: 1
