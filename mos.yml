@@ -4,14 +4,14 @@ type: lib
 version: 2.1.2
 
 build_vars:
-  MGOS_ESP8266_LWIP: 1
+  MGOS_ESP8266_LWIP: 1_SDK
 
 conds:
   # For esp32, SDK provides LwIP and this is basically an no-op library.
   - when: mos.platform == "esp8266"
     apply:
       conds:
-        - when: build_vars.MGOS_ESP8266_LWIP == "1"
+        - when: build_vars.MGOS_ESP8266_LWIP == "1_CS"
           apply:
             version: 1.4.1
             sources:
@@ -39,7 +39,7 @@ conds:
 
         - when: build_vars.MGOS_ESP8266_LWIP == "1_SDK"
           apply:
-            version: 1.4.1
+            version: 1.4.2
             includes:
               - src/esp8266/sdk_lwip/include
             sources:
