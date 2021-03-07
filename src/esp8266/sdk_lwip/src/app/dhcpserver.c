@@ -37,7 +37,7 @@ uint32 dhcps_lease_time = DHCPS_LEASE_TIME_DEF;  //minute
 void wifi_softap_dhcps_client_leave(u8 *bssid, struct ip_addr *ip,bool force);
 uint32 wifi_softap_dhcps_client_update(u8 *bssid, struct ip_addr *ip);
 struct netif * eagle_lwip_getif(uint8 index);
-int wifi_softap_set_station_info(char *info, struct ip_addr *addr);
+int wifi_softap_set_station_info(unsigned char *info, struct ip_addr *addr);
 
 /******************************************************************************
  * FunctionName : node_insert_to_list
@@ -331,6 +331,8 @@ static void ICACHE_FLASH_ATTR send_offer(struct dhcps_msg *m)
         SendOffer_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
 #if DHCPS_DEBUG
             os_printf("dhcps: send_offer>>udp_sendto result %x\n",SendOffer_err_t);
+#else
+            (void) SendOffer_err_t;
 #endif
         if(p->ref != 0){
 #if DHCPS_DEBUG
@@ -391,6 +393,8 @@ static void ICACHE_FLASH_ATTR send_nak(struct dhcps_msg *m)
         SendNak_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
 #if DHCPS_DEBUG
             os_printf("dhcps: send_nak>>udp_sendto result %x\n",SendNak_err_t);
+#else
+            (void) SendNak_err_t;
 #endif
         if(p->ref != 0){
 #if DHCPS_DEBUG
@@ -452,6 +456,8 @@ static void ICACHE_FLASH_ATTR send_ack(struct dhcps_msg *m)
         SendAck_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
 #if DHCPS_DEBUG
             os_printf("dhcps: send_ack>>udp_sendto result %x\n",SendAck_err_t);
+#else
+            (void) SendAck_err_t;
 #endif
 
         if(p->ref != 0){
@@ -942,7 +948,6 @@ void ICACHE_FLASH_ATTR dhcps_coarse_tmr(void)
 bool ICACHE_FLASH_ATTR wifi_softap_set_dhcps_offer_option(uint8 level, void* optarg)
 {
     bool offer_flag = true;
-    uint8 option = 0;
     if (optarg == NULL && wifi_softap_dhcps_status() == false)
         return false;
 

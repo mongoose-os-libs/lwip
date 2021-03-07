@@ -103,7 +103,7 @@ static const char mem_debug_file[] ICACHE_RODATA_ATTR = __FILE__;
 #ifdef DYC_IGMP_DEBUG
 #define IGMP_LOG		os_printf
 #else
-#define IGMP_LOG		//os_printf
+#define IGMP_LOG(a,b,c)
 #endif
 
 /* 
@@ -150,7 +150,7 @@ static struct igmp_group *igmp_lookup_group(struct netif *ifp, ip_addr_t *addr)I
 static err_t  igmp_remove_group(struct igmp_group *group)ICACHE_FLASH_ATTR;
 static void   igmp_timeout( struct igmp_group *group)ICACHE_FLASH_ATTR;
 static void   igmp_start_timer(struct igmp_group *group, u8_t max_time)ICACHE_FLASH_ATTR;
-static void   igmp_stop_timer(struct igmp_group *group)ICACHE_FLASH_ATTR;
+//static void   igmp_stop_timer(struct igmp_group *group)ICACHE_FLASH_ATTR;
 static void   igmp_delaying_member(struct igmp_group *group, u8_t maxresp)ICACHE_FLASH_ATTR;
 static err_t  igmp_ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif)ICACHE_FLASH_ATTR;
 static void   igmp_send(struct igmp_group *group, u8_t type)ICACHE_FLASH_ATTR;
@@ -739,7 +739,7 @@ else
  *
  * @param group the igmp_group for which to stop the timer
  */
-static void
+void
 igmp_stop_timer(struct igmp_group *group)
 {
   group->timer = 0;

@@ -115,7 +115,7 @@ tcp_timer_needed(void)
  * @param arg unused argument
  */
 
-static void ICACHE_FLASH_ATTR
+void ICACHE_FLASH_ATTR
 tcp_timer_coarse(void *arg)
 {
   LWIP_UNUSED_ARG(arg);

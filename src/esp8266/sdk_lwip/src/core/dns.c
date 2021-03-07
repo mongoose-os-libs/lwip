@@ -450,7 +450,7 @@ dns_local_addhost(const char *hostname, const ip_addr_t *addr)
  *         better check for failure: != IPADDR_NONE) or IPADDR_NONE if the hostname
  *         was not found in the cached dns_table.
  */
-static u32_t ICACHE_FLASH_ATTR
+u32_t ICACHE_FLASH_ATTR
 dns_lookup(const char *name)
 {
   u8_t i;

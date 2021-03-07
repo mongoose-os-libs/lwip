@@ -37,6 +37,27 @@ conds:
               TCP_MSL: 5000
               TCP_WND: 2920
 
+        - when: build_vars.MGOS_ESP8266_LWIP == "1_SDK"
+          apply:
+            version: 1.4.1
+            includes:
+              - src/esp8266/sdk_lwip/include
+            sources:
+              - src/esp8266
+              - src/esp8266/sdk_lwip/src/api
+              - src/esp8266/sdk_lwip/src/core
+              - src/esp8266/sdk_lwip/src/core/ipv4
+              - src/esp8266/sdk_lwip/src/netif
+              - src/esp8266/sdk_lwip/src/app/dhcpserver.c
+            cdefs:
+              EBUF_LWIP: 1
+              LWIP_OPEN_SRC: 1
+              PBUF_RSV_FOR_WLAN: 1
+              LWIP_RAND: os_random
+              TCP_MSS: 1460
+              TCP_MSL: 5000
+              TCP_WND: 2920
+
   # TODO(rojer): When mos supports more elaborate conds, this can be deduped.
   - when: mos.platform == "stm32"
     apply:

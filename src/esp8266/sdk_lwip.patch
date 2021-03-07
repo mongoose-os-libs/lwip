@@ -1,0 +1,207 @@
+--- ./sdk_lwip/include/lwipopts.h.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/include/lwipopts.h	2021-03-07 13:25:56.138097825 +0000
+@@ -790,7 +790,6 @@
+ #define LWIP_MDNS                      1
+ #endif
+ /*
+-/*
+    ----------------------------------
+    ---------- DNS options -----------
+    ----------------------------------
+--- ./sdk_lwip/include/lwip/ip_addr.h.orig	2021-03-07 13:23:09.025912487 +0000
++++ ./sdk_lwip/include/lwip/ip_addr.h	2021-03-07 13:24:19.973991159 +0000
+@@ -210,7 +210,7 @@
+ #define ip_addr_islinklocal(addr1) (((addr1)->addr & PP_HTONL(0xffff0000UL)) == PP_HTONL(0xa9fe0000UL))
+ 
+ #define ip_addr_debug_print(debug, ipaddr) \
+-  LWIP_DEBUGF(debug, ("%"U16_F".%"U16_F".%"U16_F".%"U16_F,             \
++  LWIP_DEBUGF(debug, ("%" U16_F ".%" U16_F ".%" U16_F ".%" U16_F,             \
+                       ipaddr != NULL ? ip4_addr1_16(ipaddr) : 0,       \
+                       ipaddr != NULL ? ip4_addr2_16(ipaddr) : 0,       \
+                       ipaddr != NULL ? ip4_addr3_16(ipaddr) : 0,       \
+--- ./sdk_lwip/include/lwip/igmp.h.orig	2021-03-07 13:23:09.025912487 +0000
++++ ./sdk_lwip/include/lwip/igmp.h	2021-03-07 13:33:02.535402600 +0000
+@@ -97,7 +97,9 @@
+ err_t  igmp_leavegroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)ICACHE_FLASH_ATTR;
+ void   igmp_tmr(void)ICACHE_FLASH_ATTR;
+ int    r_rand(void);
++#ifndef LWIP_RAND
+ #define LWIP_RAND()  r_rand()
++#endif
+ #ifdef __cplusplus
+ }
+ #endif
+--- ./sdk_lwip/src/core/dhcp.c.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/src/core/dhcp.c	2021-03-07 13:57:04.167952143 +0000
+@@ -189,6 +189,7 @@
+   }
+   vendor_class_len = len;
+   memcpy(vendor_class_buf, str, len);
++    return ERR_OK;
+ }
+ 
+ /**
+@@ -342,7 +343,7 @@
+ 
+     if (vendor_class_buf != NULL) {
+       const char *p = (const char*)vendor_class_buf;
+-      u8_t namelen = (u8_t)os_strlen(p);
++      //u8_t namelen = (u8_t)os_strlen(p);
+       if (vendor_class_len > 0) {
+         LWIP_ASSERT("DHCP: vendor_class_len is too long!", vendor_class_len < 255);
+         dhcp_option(dhcp, DHCP_OPTION_US, vendor_class_len);
+@@ -951,7 +952,7 @@
+ 
+     if (vendor_class_buf != NULL) {
+       const char *p = (const char*)vendor_class_buf;
+-      u8_t namelen = (u8_t)os_strlen(p);
++      //u8_t namelen = (u8_t)os_strlen(p);
+       if (vendor_class_len > 0) {
+         LWIP_ASSERT("DHCP: vendor_class_len is too long!", vendor_class_len < 255);
+         dhcp_option(dhcp, DHCP_OPTION_US, vendor_class_len);
+@@ -1162,7 +1163,7 @@
+ 
+     if (vendor_class_buf != NULL) {
+       const char *p = (const char*)vendor_class_buf;
+-      u8_t namelen = (u8_t)os_strlen(p);
++      //u8_t namelen = (u8_t)os_strlen(p);
+       if (vendor_class_len > 0) {
+         LWIP_ASSERT("DHCP: vendor_class_len is too long!", vendor_class_len < 255);
+         dhcp_option(dhcp, DHCP_OPTION_US, vendor_class_len);
+@@ -1237,7 +1238,7 @@
+ 
+     if (vendor_class_buf != NULL) {
+       const char *p = (const char*)vendor_class_buf;
+-      u8_t namelen = (u8_t)os_strlen(p);
++      //u8_t namelen = (u8_t)os_strlen(p);
+       if (vendor_class_len > 0) {
+         LWIP_ASSERT("DHCP: vendor_class_len is too long!", vendor_class_len < 255);
+         dhcp_option(dhcp, DHCP_OPTION_US, vendor_class_len);
+--- ./sdk_lwip/src/core/init.c.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/src/core/init.c	2021-03-07 13:58:17.432103852 +0000
+@@ -260,7 +260,7 @@
+ lwip_init(void)
+ {
+   MEMP_NUM_TCP_PCB = 5;
+-  TCP_WND = (4 * TCP_MSS);
++  //TCP_WND = (4 * TCP_MSS);
+   TCP_MAXRTX = 12;
+   TCP_SYNMAXRTX = 6;
+ 
+--- ./sdk_lwip/src/core/dns.c.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/src/core/dns.c	2021-03-07 13:45:28.746318109 +0000
+@@ -450,7 +450,7 @@
+  *         better check for failure: != IPADDR_NONE) or IPADDR_NONE if the hostname
+  *         was not found in the cached dns_table.
+  */
+-static u32_t ICACHE_FLASH_ATTR
++u32_t ICACHE_FLASH_ATTR
+ dns_lookup(const char *name)
+ {
+   u8_t i;
+--- ./sdk_lwip/src/core/ipv4/igmp.c.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/src/core/ipv4/igmp.c	2021-03-07 14:04:05.956800908 +0000
+@@ -103,7 +103,7 @@
+ #ifdef DYC_IGMP_DEBUG
+ #define IGMP_LOG		os_printf
+ #else
+-#define IGMP_LOG		//os_printf
++#define IGMP_LOG(a,b,c)
+ #endif
+ 
+ /* 
+@@ -150,7 +150,7 @@
+ static err_t  igmp_remove_group(struct igmp_group *group)ICACHE_FLASH_ATTR;
+ static void   igmp_timeout( struct igmp_group *group)ICACHE_FLASH_ATTR;
+ static void   igmp_start_timer(struct igmp_group *group, u8_t max_time)ICACHE_FLASH_ATTR;
+-static void   igmp_stop_timer(struct igmp_group *group)ICACHE_FLASH_ATTR;
++//static void   igmp_stop_timer(struct igmp_group *group)ICACHE_FLASH_ATTR;
+ static void   igmp_delaying_member(struct igmp_group *group, u8_t maxresp)ICACHE_FLASH_ATTR;
+ static err_t  igmp_ip_output_if(struct pbuf *p, ip_addr_t *src, ip_addr_t *dest, struct netif *netif)ICACHE_FLASH_ATTR;
+ static void   igmp_send(struct igmp_group *group, u8_t type)ICACHE_FLASH_ATTR;
+@@ -739,7 +739,7 @@
+  *
+  * @param group the igmp_group for which to stop the timer
+  */
+-static void
++void
+ igmp_stop_timer(struct igmp_group *group)
+ {
+   group->timer = 0;
+--- ./sdk_lwip/src/core/sntp.c.orig	2021-03-07 13:23:09.033912496 +0000
++++ ./sdk_lwip/src/core/sntp.c	2021-03-07 14:00:07.824328524 +0000
+@@ -272,7 +272,9 @@
+ };
+ static struct sntp_server sntp_servers[SNTP_MAX_SERVERS];
+ 
++#if SNTP_GET_SERVERS_FROM_DHCP
+ static u8_t sntp_set_servers_from_dhcp;
++#endif /* SNTP_GET_SERVERS_FROM_DHCP */
+ #if SNTP_SUPPORT_MULTIPLE_SERVERS
+ /** The currently used server (initialized to 0) */
+ static u8_t sntp_current_server;
+@@ -345,7 +347,6 @@
+ {
+   long days, rem;
+   time_t lcltime;
+-  int i;
+   int y;
+   int yleap;
+   const int *ip;
+--- ./sdk_lwip/src/core/timers.c.orig	2021-03-07 13:23:09.033912496 +0000
++++ ./sdk_lwip/src/core/timers.c	2021-03-07 14:00:42.408398071 +0000
+@@ -115,7 +115,7 @@
+  * @param arg unused argument
+  */
+ 
+-static void ICACHE_FLASH_ATTR
++void ICACHE_FLASH_ATTR
+ tcp_timer_coarse(void *arg)
+ {
+   LWIP_UNUSED_ARG(arg);
+--- ./sdk_lwip/src/app/dhcpserver.c.orig	2021-03-07 13:23:09.029912491 +0000
++++ ./sdk_lwip/src/app/dhcpserver.c	2021-03-07 14:08:51.113351807 +0000
+@@ -37,7 +37,7 @@
+ void wifi_softap_dhcps_client_leave(u8 *bssid, struct ip_addr *ip,bool force);
+ uint32 wifi_softap_dhcps_client_update(u8 *bssid, struct ip_addr *ip);
+ struct netif * eagle_lwip_getif(uint8 index);
+-int wifi_softap_set_station_info(char *info, struct ip_addr *addr);
++int wifi_softap_set_station_info(unsigned char *info, struct ip_addr *addr);
+ 
+ /******************************************************************************
+  * FunctionName : node_insert_to_list
+@@ -331,6 +331,8 @@
+         SendOffer_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
+ #if DHCPS_DEBUG
+             os_printf("dhcps: send_offer>>udp_sendto result %x\n",SendOffer_err_t);
++#else
++            (void) SendOffer_err_t;
+ #endif
+         if(p->ref != 0){
+ #if DHCPS_DEBUG
+@@ -391,6 +393,8 @@
+         SendNak_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
+ #if DHCPS_DEBUG
+             os_printf("dhcps: send_nak>>udp_sendto result %x\n",SendNak_err_t);
++#else
++            (void) SendNak_err_t;
+ #endif
+         if(p->ref != 0){
+ #if DHCPS_DEBUG
+@@ -452,6 +456,8 @@
+         SendAck_err_t = udp_sendto( pcb_dhcps, p, &broadcast_dhcps, DHCPS_CLIENT_PORT );
+ #if DHCPS_DEBUG
+             os_printf("dhcps: send_ack>>udp_sendto result %x\n",SendAck_err_t);
++#else
++            (void) SendAck_err_t;
+ #endif
+ 
+         if(p->ref != 0){
+@@ -942,7 +948,6 @@
+ bool ICACHE_FLASH_ATTR wifi_softap_set_dhcps_offer_option(uint8 level, void* optarg)
+ {
+     bool offer_flag = true;
+-    uint8 option = 0;
+     if (optarg == NULL && wifi_softap_dhcps_status() == false)
+         return false;
+ 

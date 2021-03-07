@@ -97,7 +97,9 @@ err_t  igmp_joingroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)ICACHE_FLASH_ATTR;
 err_t  igmp_leavegroup(ip_addr_t *ifaddr, ip_addr_t *groupaddr)ICACHE_FLASH_ATTR;
 void   igmp_tmr(void)ICACHE_FLASH_ATTR;
 int    r_rand(void);
+#ifndef LWIP_RAND
 #define LWIP_RAND()  r_rand()
+#endif
 #ifdef __cplusplus
 }
 #endif
