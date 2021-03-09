@@ -802,6 +802,10 @@
 #define LWIP_DNS                        1
 #endif
 
+#ifndef LWIP_DNS_NO_CLIENT
+#define LWIP_DNS_NO_CLIENT              0
+#endif
+
 /** DNS maximum number of entries to maintain locally. */
 #ifndef DNS_TABLE_SIZE
 #define DNS_TABLE_SIZE                  4

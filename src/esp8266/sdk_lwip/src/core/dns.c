@@ -244,6 +244,7 @@ dns_init()
 
   LWIP_DEBUGF(DNS_DEBUG, ("dns_init: initializing\n"));
 
+#if !LWIP_DNS_NO_CLIENT
   /* if dns client not yet initialized... */
   if (dns_pcb == NULL) {
     dns_pcb = udp_new();
@@ -265,6 +266,9 @@ dns_init()
 #if DNS_LOCAL_HOSTLIST
   dns_init_local();
 #endif
+#else
+  (void) dns_recv;
+#endif // !LWIP_DNS_NO_CLIENT
 }
 
 /**

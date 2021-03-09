@@ -53,7 +53,7 @@
 #include "lwip/pbuf.h"
 #include "lwip/app/time.h"
 //#include <string.h>
-#if LWIP_UDP
+#if LWIP_UDP && !LWIP_DNS_NO_CLIENT
 
 /**
  * SNTP_DEBUG: Enable debugging for SNTP.

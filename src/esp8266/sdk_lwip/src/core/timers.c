@@ -222,7 +222,7 @@ igmp_timer(void *arg)
 }
 #endif /* LWIP_IGMP */
 
-#if LWIP_DNS
+#if LWIP_DNS && !LWIP_DNS_NO_CLIENT
 /**
  * Timer callback function that calls dns_tmr() and reschedules itself.
  *
@@ -257,7 +257,7 @@ void sys_timeouts_init(void)
 #if LWIP_IGMP
   sys_timeout(IGMP_TMR_INTERVAL, igmp_timer, NULL);
 #endif /* LWIP_IGMP */
-#if LWIP_DNS
+#if LWIP_DNS && !LWIP_DNS_NO_CLIENT
   sys_timeout(DNS_TMR_INTERVAL, dns_timer, NULL);
 #endif /* LWIP_DNS */
 
