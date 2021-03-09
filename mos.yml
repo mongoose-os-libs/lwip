@@ -33,9 +33,10 @@ conds:
               LWIP_ENABLE_ESF_BUF_REXMIT: 1
               LWIP_RANDOMIZE_INITIAL_LOCAL_PORTS: 1
               LWIP_RAND: os_random
-              TCP_MSS: 1460
               TCP_MSL: 5000
+              TCP_MSS: 1460
               TCP_WND: 2920
+              MEMP_NUM_TCP_PCB: 20
 
         - when: build_vars.MGOS_ESP8266_LWIP == "1_SDK"
           apply:
@@ -54,9 +55,10 @@ conds:
               LWIP_OPEN_SRC: 1
               PBUF_RSV_FOR_WLAN: 1
               LWIP_RAND: os_random
-              TCP_MSS: 1460
               TCP_MSL: 5000
+              TCP_MSS: 1460
               TCP_WND: 2920
+              MEMP_NUM_TCP_PCB: 20
 
   # TODO(rojer): When mos supports more elaborate conds, this can be deduped.
   - when: mos.platform == "stm32"
