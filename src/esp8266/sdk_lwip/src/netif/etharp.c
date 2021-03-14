@@ -1299,6 +1299,12 @@ etharp_request(struct netif *netif, ip_addr_t *ipaddr)
 }
 #endif /* LWIP_ARP */
 
+struct wdevctl {
+  uint16_t num_free_bufs;
+};
+
+extern struct wdevctl wDevCtrl;
+
 /**
  * Process received ethernet frames. Using this function instead of directly
  * calling ip_input and passing ARP frames through etharp in ethernetif_input,
@@ -1373,11 +1379,27 @@ ethernet_input(struct pbuf *p, struct netif *netif)
         LWIP_ASSERT("Can't move over header in packet", 0);
         goto free_and_return;
       } else {
+        /*
+         * SDK maintains a pool of 5 buffers. The number of free + 1
+         * is the first field in the wDevCtrl struct. When it gets down to 1
+         * the SDK prints "LmacRxBlk:1" and drops incoming packets.
+         * If getting close to the limit, we start making copies to avoid pressure.
+         */
+        if (wDevCtrl.num_free_bufs <= 3) {
+          struct pbuf *p2 = pbuf_alloc(PBUF_RAW, p->tot_len, PBUF_RAM);
+          if (p2 != NULL) {
+            pbuf_copy(p2, p);
+            pbuf_free(p);
+            p = p2;
+          } else {
+            goto free_and_return;
+          }
+        }
         /* pass to IP layer */
         ip_input(p, netif);
       }
       break;
-      
+
     case PP_HTONS(ETHTYPE_ARP):
       if (!(netif->flags & NETIF_FLAG_ETHARP)) {
         goto free_and_return;
