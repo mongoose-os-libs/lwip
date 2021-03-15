@@ -139,7 +139,8 @@ u8_t  dhcp_rx_options_given[DHCP_OPTION_IDX_MAX];
 #define dhcp_get_option_value(dhcp, idx)      (dhcp_rx_options_val[idx])
 #define dhcp_set_option_value(dhcp, idx, val) (dhcp_rx_options_val[idx] = (val))
 
-bool manual_set_flag = false;  /* add for AT by tzx*/
+// bool manual_set_flag = false;  /* add for AT by tzx*/
+#define manual_set_flag false
 
 /* DHCP client state machine functions */
 static err_t dhcp_discover(struct netif *netif);
