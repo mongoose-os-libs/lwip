@@ -235,7 +235,7 @@ icmp_input(struct pbuf *p, struct netif *inp)
       ret = ip_output_if(p, ip_current_dest_addr(), IP_HDRINCL,
                    ICMP_TTL, 0, IP_PROTO_ICMP, inp);
       if (ret != ERR_OK) {
-        LWIP_DEBUGF(ICMP_DEBUG, ("icmp_input: ip_output_if returned an error: %c.\n", ret));
+        LWIP_DEBUGF(ICMP_DEBUG, ("icmp_input: ip_output_if returned an error: %d.\n", (int) ret));
       }
     }
     break;

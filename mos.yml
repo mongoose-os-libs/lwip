@@ -60,6 +60,8 @@ conds:
               TCP_WND: 2920
               MEMP_NUM_TCP_PCB: 20
               LWIP_DNS_NO_CLIENT: 1
+              # LWIP_DEBUG: 1
+              # DHCP_DEBUG: LWIP_DBG_ON
 
   # TODO(rojer): When mos supports more elaborate conds, this can be deduped.
   - when: mos.platform == "stm32"

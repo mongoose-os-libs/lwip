@@ -34,7 +34,6 @@
 #ifndef __ARCH_CC_H__
 #define __ARCH_CC_H__
 
-//#include <string.h>
 #include "c_types.h"
 #include "ets_sys.h"
 #include "osapi.h"
@@ -61,9 +60,9 @@ typedef unsigned long   mem_ptr_t;
 #define U16_F "d"
 #define X16_F "x"
 
-#define S32_F "d"
-#define U32_F "d"
-#define X32_F "x"
+#define S32_F "ld"
+#define U32_F "lu"
+#define X32_F "lx"
 
 #define LWIP_ERR_T s32_t
 
@@ -73,11 +72,9 @@ typedef unsigned long   mem_ptr_t;
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 
-//#define LWIP_DEBUG
-
 #ifdef LWIP_DEBUG
 #define LWIP_PLATFORM_DIAG(x) os_printf x
-#define LWIP_PLATFORM_ASSERT(x) ETS_ASSERT(x)
+#define LWIP_PLATFORM_ASSERT(x) os_printf(x "\n")
 #else
 #define LWIP_PLATFORM_DIAG(x)
 #define LWIP_PLATFORM_ASSERT(x)
