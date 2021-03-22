@@ -655,15 +655,8 @@
 /**
  * DHCP_DOES_ARP_CHECK==1: Do an ARP check on the offered address.
  */
-#ifndef DHCP_DOES_ARP_CHECK
-#define DHCP_DOES_ARP_CHECK             ((LWIP_DHCP) && (LWIP_ARP))
-#endif
-
-/**
- * DHCP_MAXRTX: Maximum number of retries of current request.
- */
-#ifndef DHCP_MAXRTX
-#define DHCP_MAXRTX                     0
+#ifndef LWIP_DHCP_DOES_ARP_CHECK
+#define LWIPDHCP_DOES_ARP_CHECK         ((LWIP_DHCP) && (LWIP_ARP))
 #endif
 
 /*
@@ -1826,7 +1819,7 @@
  * debug messages of certain types.
  */
 #ifndef LWIP_DBG_TYPES_ON
-#define LWIP_DBG_TYPES_ON               LWIP_DBG_OFF
+#define LWIP_DBG_TYPES_ON               LWIP_DBG_ON
 #endif
 
 /**

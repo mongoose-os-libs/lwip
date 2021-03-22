@@ -659,12 +659,46 @@
 #endif
 
 /**
- * DHCP_DOES_ARP_CHECK==1: Do an ARP check on the offered address.
+ * LWIP_DHCP_DOES_ARP_CHECK==1: Do an ARP check on the offered address.
  */
-#ifndef DHCP_DOES_ARP_CHECK
-#define DHCP_DOES_ARP_CHECK             ((LWIP_DHCP) && (LWIP_ARP))
+#ifndef LWIP_DHCP_DOES_ARP_CHECK
+#define LWIP_DHCP_DOES_ARP_CHECK        ((LWIP_DHCP) && (LWIP_ARP))
 #endif
 
+/**
+ * LWIP_DHCP_BOOTP_FILE==1: Store offered_si_addr and boot_file_name.
+ */
+#if !defined LWIP_DHCP_BOOTP_FILE || defined __DOXYGEN__
+#define LWIP_DHCP_BOOTP_FILE            0
+#endif
+
+/**
+ * LWIP_DHCP_GETS_NTP==1: Request NTP servers with discover/select. For each
+ * response packet, an callback is called, which has to be provided by the port:
+ * void dhcp_set_ntp_servers(u8_t num_ntp_servers, ip_addr_t* ntp_server_addrs);
+*/
+#if !defined LWIP_DHCP_GET_NTP_SRV || defined __DOXYGEN__
+#define LWIP_DHCP_GET_NTP_SRV           0
+#endif
+
+/**
+ * The maximum of NTP servers requested
+ */
+#if !defined LWIP_DHCP_MAX_NTP_SERVERS || defined __DOXYGEN__
+#define LWIP_DHCP_MAX_NTP_SERVERS       1
+#endif
+
+/**
+ * LWIP_DHCP_MAX_DNS_SERVERS > 0: Request DNS servers with discover/select.
+ * DNS servers received in the response are passed to DNS via @ref dns_setserver()
+ * (up to the maximum limit defined here).
+ */
+#if !defined LWIP_DHCP_MAX_DNS_SERVERS || defined __DOXYGEN__
+#define LWIP_DHCP_MAX_DNS_SERVERS       DNS_MAX_SERVERS
+#endif
+/**
+ * @}
+ */
 /*
    ------------------------------------
    ---------- AUTOIP options ----------

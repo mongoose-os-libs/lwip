@@ -527,7 +527,7 @@ void netif_set_link_up(struct netif *netif )
 
 #if LWIP_DHCP
     if (netif->dhcp) {
-      dhcp_network_changed(netif);
+      dhcp_network_changed_link_up(netif);
     }
 #endif /* LWIP_DHCP */
 
