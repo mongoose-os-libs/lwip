@@ -205,12 +205,13 @@ void dhcp_fine_tmr(void);
 #define DHCP_OPTION_PAD 0
 #define DHCP_OPTION_SUBNET_MASK 1 /* RFC 2132 3.3 */
 #define DHCP_OPTION_ROUTER 3
-#define DHCP_OPTION_DNS_SERVER 6 
+#define DHCP_OPTION_DNS_SERVER 6
 #define DHCP_OPTION_HOSTNAME 12
 #define DHCP_OPTION_IP_TTL 23
 #define DHCP_OPTION_MTU 26
 #define DHCP_OPTION_BROADCAST 28
 #define DHCP_OPTION_TCP_TTL 37
+#define DHCP_OPTION_NTP 42
 #define DHCP_OPTION_END 255
 
 /**add options for support more router by liuHan**/
