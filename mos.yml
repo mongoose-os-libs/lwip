@@ -67,8 +67,8 @@ conds:
   - when: mos.platform == "stm32"
     apply:
       libs:
-        - origin: https://github.com/mongoose-os-libs/freertos
-        - origin: https://github.com/mongoose-os-libs/mbedtls
+        - location: https://github.com/mongoose-os-libs/freertos
+        - location: https://github.com/mongoose-os-libs/mbedtls
       sources:
         - src
         - src/freertos
@@ -85,8 +85,8 @@ conds:
   - when: mos.platform == "rs14100"
     apply:
       libs:
-        - origin: https://github.com/mongoose-os-libs/freertos
-        - origin: https://github.com/mongoose-os-libs/mbedtls
+        - location: https://github.com/mongoose-os-libs/freertos
+        - location: https://github.com/mongoose-os-libs/mbedtls
       sources:
         - src
         - src/freertos
