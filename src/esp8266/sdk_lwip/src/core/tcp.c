@@ -402,6 +402,7 @@ tcp_abandon(struct tcp_pcb *pcb, int reset)
 void
 tcp_abort(struct tcp_pcb *pcb)
 {
+  os_printf("tcp_abort(%p)\n", pcb);
   tcp_abandon(pcb, 1);
 }
 
