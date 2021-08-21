@@ -8,6 +8,13 @@ build_vars:
 
 conds:
   # For esp32, SDK provides LwIP and this is basically an no-op library.
+  - when: mos.platform == "esp32"
+    apply:
+      sources:
+        - src
+      includes:
+        - include
+
   - when: mos.platform == "esp8266"
     apply:
       conds:
@@ -80,6 +87,7 @@ conds:
         - lwip/src/netif/ppp
       includes:
         - include
+        - include/lwip
         - lwip/src/include
 
   - when: mos.platform == "rs14100"
@@ -98,6 +106,7 @@ conds:
         - lwip/src/netif/ppp
       includes:
         - include
+        - include/lwip
         - lwip/src/include
 
 cdefs:

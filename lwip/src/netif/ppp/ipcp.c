@@ -1930,7 +1930,9 @@ static void ipcp_up(fsm *f) {
     if (go->dnsaddr[1])
 	script_setenv("DNS2", ip_ntoa(go->dnsaddr[1]), 0);
 #endif /* UNUSED */
+    pcb->dns_server = 0;
     if (pcb->settings.usepeerdns && (go->dnsaddr[0] || go->dnsaddr[1])) {
+	pcb->dns_server = go->dnsaddr[0];
 	sdns(pcb, go->dnsaddr[0], go->dnsaddr[1]);
 #if 0 /* UNUSED */
 	script_setenv("USEPEERDNS", "1", 0);

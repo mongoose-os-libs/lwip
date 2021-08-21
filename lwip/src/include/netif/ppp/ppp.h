@@ -421,6 +421,8 @@ struct ppp_pcb_s {
   ipv6cp_options ipv6cp_allowoptions; /* Options we allow peer to request */
   ipv6cp_options ipv6cp_hisoptions;   /* Options that we ack'd */
 #endif /* PPP_IPV6_SUPPORT */
+
+  u32_t dns_server;
 };
 
 /************************

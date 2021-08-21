@@ -675,6 +675,10 @@ dhcp_handle_ack(struct netif *netif, struct dhcp_msg *msg_in)
     dns_setserver(n, &dns_addr);
   }
 #endif /* LWIP_DHCP_PROVIDE_DNS_SERVERS */
+  ip4_addr_set_zero(&dhcp->offered_dns_addr);
+  if (dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER)) {
+    ip4_addr_set_u32(&dhcp->offered_dns_addr, lwip_htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER)));
+  }
 }
 
 /**

@@ -29,6 +29,7 @@ extern "C" {
 #endif
 
 bool mgos_lwip_if_get_ip_info(const struct netif *nif,
+                              const char *dns_override,
                               struct mgos_net_ip_info *ip_info);
 
 #ifdef __cplusplus

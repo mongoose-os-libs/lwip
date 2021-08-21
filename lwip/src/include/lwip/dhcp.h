@@ -90,6 +90,7 @@ struct dhcp
   ip4_addr_t offered_ip_addr;
   ip4_addr_t offered_sn_mask;
   ip4_addr_t offered_gw_addr;
+  ip4_addr_t offered_dns_addr;
 
   u32_t offered_t0_lease; /* lease period (in seconds) */
   u32_t offered_t1_renew; /* recommended renew time (usually 50% of lease period) */

@@ -627,6 +627,10 @@ dhcp_handle_ack(struct netif *netif)
 	  }
   }
 #endif /* LWIP_DNS */
+  ip_addr_set_zero(&dhcp->offered_dns_addr);
+  if (dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER)) {
+    ip4_addr_set_u32(&dhcp->offered_dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER)));
+  }
 }
 
 /** Set a statically allocated struct dhcp to work with.
