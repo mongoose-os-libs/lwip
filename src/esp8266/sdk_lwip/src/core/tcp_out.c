@@ -694,6 +694,10 @@ tcp_write(struct tcp_pcb *pcb, const void *arg, u16_t len, u8_t apiflags)
     TCPH_SET_FLAG(seg->tcphdr, TCP_PSH);
   }
 
+  /* Send out the data immediately, do not accumulate.
+   * Mongoose does buffering for us, reduce buffer bloat. */
+  tcp_output(pcb);
+
   return ERR_OK;
 memerr:
   pcb->flags |= TF_NAGLEMEMERR;
