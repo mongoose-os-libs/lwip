@@ -54,6 +54,7 @@
 #include "lwip/snmp.h"
 #include "netif/etharp.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #ifdef MEMLEAK_DEBUG
@@ -1169,6 +1170,24 @@ tcp_output_segment(struct tcp_seg *seg, struct tcp_pcb *pcb)
 #endif /* TCP_CHECKSUM_ON_COPY */
 #endif /* CHECKSUM_GEN_TCP */
   TCP_STATS_INC(tcp.xmit);
+
+  /*
+   * If the segment is a single RAM-backed pbuf, trim it to reduce memory usage.
+   * Note that what we want here is pbuf_realloc but it does not handle the case
+   * of buffer being relocated (unlikely in practice).
+   */
+  do {
+    struct pbuf *p = seg->p;
+    if (p->type != PBUF_RAM || p->next != NULL) break;
+    uint16_t payload_offset = (((char *) p->payload) - ((char *) p));
+    uint16_t trimmed_len = LWIP_MEM_ALIGN_SIZE(payload_offset + p->len);
+    struct pbuf *p2 = (struct pbuf *) realloc(p, trimmed_len);
+    if (p2 != NULL && p2 != p) {
+      p2->payload = ((char *) p2) + payload_offset;
+      seg->p = p2;
+      seg->tcphdr = p2->payload;
+    }
+  } while (0);
 
 #if LWIP_NETIF_HWADDRHINT
   ip_output_hinted(seg->p, &(pcb->local_ip), &(pcb->remote_ip), pcb->ttl, pcb->tos,
