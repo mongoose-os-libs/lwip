@@ -663,8 +663,11 @@ dhcp_handle_ack(struct netif *netif, struct dhcp_msg *msg_in)
   /* NTP servers */
   for (n = 0; (n < LWIP_DHCP_MAX_NTP_SERVERS) && dhcp_option_given(dhcp, DHCP_OPTION_IDX_NTP_SERVER + n); n++) {
     ip4_addr_set_u32(&ntp_server_addrs[n], lwip_htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_NTP_SERVER + n)));
+    if (n == 0) {
+      ip4_addr_set_u32(&dhcp->offered_ntp_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_NTP_SERVER)));
+    }
   }
-  dhcp_set_ntp_servers(n, ntp_server_addrs);
+  //dhcp_set_ntp_servers(n, ntp_server_addrs);
 #endif /* LWIP_DHCP_GET_NTP_SRV */
 
 #if LWIP_DHCP_PROVIDE_DNS_SERVERS

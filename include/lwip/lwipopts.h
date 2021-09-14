@@ -53,6 +53,7 @@ extern "C" {
 #define LWIP_POSIX_SOCKETS_IO_NAMES 0
 #define LWIP_STATS 0
 #define LWIP_TCP_KEEPALIVE 1
+#define LWIP_DHCP_GET_NTP_SRV 1
 
 #define SYS_LIGHTWEIGHT_PROT 1
 

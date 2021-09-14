@@ -25,8 +25,7 @@
 #include "lwip/netif.h"
 #include "lwip/tcpip.h"
 
-bool mgos_lwip_if_get_ip_info(const struct netif *nif,
-                              const char *dns_override,
+bool mgos_lwip_if_get_ip_info(const struct netif *nif, const char *dns_override,
                               struct mgos_net_ip_info *ip_info) {
   if (nif == NULL || !(nif->flags & NETIF_FLAG_UP)) return false;
   memset(ip_info, 0, sizeof(*ip_info));
@@ -39,6 +38,7 @@ bool mgos_lwip_if_get_ip_info(const struct netif *nif,
     struct dhcp *dhcp = netif_dhcp_data(nif);
     if (dhcp != NULL) {
       ip_info->dns.sin_addr.s_addr = ip4_addr_get_u32(&dhcp->offered_dns_addr);
+      ip_info->ntp.sin_addr.s_addr = ip4_addr_get_u32(&dhcp->offered_ntp_addr);
     }
   }
   return true;
@@ -46,14 +46,14 @@ bool mgos_lwip_if_get_ip_info(const struct netif *nif,
 
 #if CS_PLATFORM != CS_P_ESP32 && CS_PLATFORM != CS_P_ESP8266
 static void tcpip_init_done(void *arg) {
-  *((bool *)arg) = true;
+  *((bool *) arg) = true;
 }
 #endif
 
 bool mgos_lwip_init(void) {
 #if CS_PLATFORM != CS_P_ESP32 && CS_PLATFORM != CS_P_ESP8266
   volatile bool lwip_inited = false;
-  tcpip_init(tcpip_init_done, (void *)&lwip_inited);
+  tcpip_init(tcpip_init_done, (void *) &lwip_inited);
   while (!lwip_inited) {
   }
 #endif

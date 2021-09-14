@@ -113,16 +113,22 @@ static const char mem_debug_file[] ICACHE_RODATA_ATTR = __FILE__;
  * This might be moved into the struct dhcp (not necessarily since
  * lwIP is single-threaded and the array is only used while in recv
  * callback). */
-#define DHCP_OPTION_IDX_OVERLOAD    0
-#define DHCP_OPTION_IDX_MSG_TYPE    1
-#define DHCP_OPTION_IDX_SERVER_ID   2
-#define DHCP_OPTION_IDX_LEASE_TIME  3
-#define DHCP_OPTION_IDX_T1          4
-#define DHCP_OPTION_IDX_T2          5
-#define DHCP_OPTION_IDX_SUBNET_MASK 6
-#define DHCP_OPTION_IDX_ROUTER      7
-#define DHCP_OPTION_IDX_DNS_SERVER	8
-#define DHCP_OPTION_IDX_MAX         (DHCP_OPTION_IDX_DNS_SERVER + DNS_MAX_SERVERS)
+#define NTP_MAX_SERVERS 1
+enum dhcp_option_idx {
+  DHCP_OPTION_IDX_OVERLOAD = 0,
+  DHCP_OPTION_IDX_MSG_TYPE,
+  DHCP_OPTION_IDX_SERVER_ID,
+  DHCP_OPTION_IDX_LEASE_TIME,
+  DHCP_OPTION_IDX_T1,
+  DHCP_OPTION_IDX_T2,
+  DHCP_OPTION_IDX_SUBNET_MASK,
+  DHCP_OPTION_IDX_ROUTER,
+  DHCP_OPTION_IDX_DNS_SERVER,
+  DHCP_OPTION_IDX_DNS_SERVER_LAST = DHCP_OPTION_IDX_DNS_SERVER + DNS_MAX_SERVERS - 1,
+  DHCP_OPTION_IDX_NTP_SERVER,
+  DHCP_OPTION_IDX_NTP_SERVER_LAST = DHCP_OPTION_IDX_NTP_SERVER + NTP_MAX_SERVERS - 1,
+  DHCP_OPTION_IDX_MAX
+};
 
 /** Holds the decoded option values, only valid while in dhcp_recv.
     @todo: move this into struct dhcp? */
@@ -614,22 +620,26 @@ dhcp_handle_ack(struct netif *netif)
   if (dhcp_option_given(dhcp, DHCP_OPTION_IDX_ROUTER)) {
     ip4_addr_set_u32(&dhcp->offered_gw_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_ROUTER)));
   }
-  
+
 #if LWIP_DNS
   /* DNS servers */
   n = 0;
   if(manual_set_flag == false) {
-	  while(dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n) && (n < DNS_MAX_SERVERS)) {
-		ip_addr_t dns_addr;
-		ip4_addr_set_u32(&dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)));
-		dns_setserver(n, &dns_addr);
-		n++;
-	  }
+    while(dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n) && (n < DNS_MAX_SERVERS)) {
+      ip_addr_t dns_addr;
+      ip4_addr_set_u32(&dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER + n)));
+      dns_setserver(n, &dns_addr);
+      n++;
+    }
   }
 #endif /* LWIP_DNS */
   ip_addr_set_zero(&dhcp->offered_dns_addr);
   if (dhcp_option_given(dhcp, DHCP_OPTION_IDX_DNS_SERVER)) {
     ip4_addr_set_u32(&dhcp->offered_dns_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_DNS_SERVER)));
+  }
+  ip_addr_set_zero(&dhcp->offered_ntp_addr);
+  if (dhcp_option_given(dhcp, DHCP_OPTION_IDX_NTP_SERVER)) {
+    ip4_addr_set_u32(&dhcp->offered_ntp_addr, htonl(dhcp_get_option_value(dhcp, DHCP_OPTION_IDX_NTP_SERVER)));
   }
 }
 
@@ -1566,6 +1576,14 @@ again:
       case(DHCP_OPTION_LEASE_TIME):
         LWIP_ASSERT("len == 4", len == 4);
         decode_idx = DHCP_OPTION_IDX_LEASE_TIME;
+        break;
+      case (DHCP_OPTION_NTP):
+        /* special case: there might be more than one server */
+        LWIP_ERROR("len %% 4 == 0", len % 4 == 0, return ERR_VAL;);
+        /* limit number of NTP servers */
+        decode_len = LWIP_MIN(len, 4 * NTP_MAX_SERVERS);
+        LWIP_ERROR("len >= decode_len", len >= decode_len, return ERR_VAL;);
+        decode_idx = DHCP_OPTION_IDX_NTP_SERVER;
         break;
       case(DHCP_OPTION_OVERLOAD):
         LWIP_ASSERT("len == 1", len == 1);
