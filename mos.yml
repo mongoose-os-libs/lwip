@@ -17,34 +17,6 @@ conds:
 
   - when: mos.platform == "esp8266"
     apply:
-      conds:
-        - when: build_vars.MGOS_ESP8266_LWIP == "1_CS"
-          apply:
-            version: 1.4.1
-            sources:
-              - src/esp8266
-              - src/esp8266/cs_lwip/src/api
-              - src/esp8266/cs_lwip/src/core
-              - src/esp8266/cs_lwip/src/core/ipv4
-              - src/esp8266/cs_lwip/src/netif
-              - src/esp8266/cs_lwip/espressif/app/dhcpserver.c
-            includes:
-              - src/esp8266/cs_lwip/src/include
-              - src/esp8266/cs_lwip/src/include/ipv4
-              - src/esp8266/cs_lwip/espressif/include
-            cdefs:
-              EBUF_LWIP: 1
-              LWIP_OPEN_SRC: 1
-              PBUF_RSV_FOR_WLAN: 1
-              ESP_ENABLE_ESPCONN: 0
-              LWIP_ENABLE_ESF_BUF_REXMIT: 1
-              LWIP_RANDOMIZE_INITIAL_LOCAL_PORTS: 1
-              LWIP_RAND: os_random
-              TCP_MSL: 5000
-              TCP_MSS: 1460
-              TCP_WND: 2920
-              MEMP_NUM_TCP_PCB: 20
-
         - when: build_vars.MGOS_ESP8266_LWIP == "1_SDK"
           apply:
             version: 1.4.2
