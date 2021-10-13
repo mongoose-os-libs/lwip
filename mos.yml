@@ -17,6 +17,7 @@ conds:
 
   - when: mos.platform == "esp8266"
     apply:
+      conds:
         - when: build_vars.MGOS_ESP8266_LWIP == "1_SDK"
           apply:
             version: 1.4.2
