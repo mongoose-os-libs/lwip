@@ -5,6 +5,7 @@ version: 2.1.2
 
 build_vars:
   MGOS_ESP8266_LWIP: 1_SDK
+  MGOS_LWIP_ENABLE_IPV4_NAT: 0
 
 conds:
   # For esp32, SDK provides LwIP and this is basically an no-op library.
@@ -14,6 +15,18 @@ conds:
         - src
       includes:
         - include
+      conds:
+        - when: build_vars.MGOS_LWIP_ENABLE_IPV4_NAT == "1"
+          apply:
+            build_vars:
+              ESP_IDF_SDKCONFIG_OPTS: >
+                ${build_vars.ESP_IDF_SDKCONFIG_OPTS}
+                CONFIG_LWIP_L2_TO_L3_COPY=y
+                CONFIG_LWIP_IP_FORWARD=y
+                CONFIG_LWIP_IPV4_NAPT=y
+            cdefs:
+              IP_NAPT_MAX: 64
+              IP_PORTMAP_MAX: 8
 
   - when: mos.platform == "esp8266"
     apply:
