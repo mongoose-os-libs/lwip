@@ -16,8 +16,14 @@ conds:
       includes:
         - include
       build_vars:
+        CONFIG_MBEDTLS_CMAC_C: y
+        CONFIG_MBEDTLS_DES_C: n
+        CONFIG_MBEDTLS_NIST_KW_C: y
+        CONFIG_MBEDTLS_RC4_DISABLED: y
         ESP_IDF_SDKCONFIG_OPTS: >
           ${build_vars.ESP_IDF_SDKCONFIG_OPTS}
+          CONFIG_LWIP_DHCP_DISABLE_VENDOR_CLASS_ID=n
+          CONFIG_LWIP_DHCP_GET_NTP_SRV=y
           CONFIG_LWIP_TCP_MSL=5000
       conds:
         - when: build_vars.MGOS_LWIP_ENABLE_IPV4_NAT == "1"
