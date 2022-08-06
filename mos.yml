@@ -8,8 +8,37 @@ build_vars:
   MGOS_LWIP_ENABLE_IPV4_NAT: 0
 
 conds:
-  # For esp32, SDK provides LwIP and this is basically an no-op library.
+  # For esp32xx, SDK provides LwIP and this is basically an no-op library.
   - when: mos.platform == "esp32"
+    apply:
+      sources:
+        - src
+      includes:
+        - include
+      build_vars:
+        CONFIG_MBEDTLS_CMAC_C: y
+        CONFIG_MBEDTLS_DES_C: n
+        CONFIG_MBEDTLS_NIST_KW_C: y
+        CONFIG_MBEDTLS_RC4_DISABLED: y
+        ESP_IDF_SDKCONFIG_OPTS: >
+          ${build_vars.ESP_IDF_SDKCONFIG_OPTS}
+          CONFIG_LWIP_DHCP_DISABLE_VENDOR_CLASS_ID=n
+          CONFIG_LWIP_DHCP_GET_NTP_SRV=y
+          CONFIG_LWIP_TCP_MSL=5000
+      conds:
+        - when: build_vars.MGOS_LWIP_ENABLE_IPV4_NAT == "1"
+          apply:
+            build_vars:
+              ESP_IDF_SDKCONFIG_OPTS: >
+                ${build_vars.ESP_IDF_SDKCONFIG_OPTS}
+                CONFIG_LWIP_L2_TO_L3_COPY=y
+                CONFIG_LWIP_IP_FORWARD=y
+                CONFIG_LWIP_IPV4_NAPT=y
+            cdefs:
+              IP_NAPT_MAX: 64
+              IP_PORTMAP_MAX: 8
+
+  - when: mos.platform == "esp32c3"
     apply:
       sources:
         - src
